@@ -69,7 +69,25 @@ describe('app routes', () => {
           _id: jamSession._id.toString(),
           where: 'Jesuit High School',
           when: new Date('July 30, 2019').toISOString(),
-          who: ['Allision', 'Brady', 'Chris'],
+          who: ['Allision', 'Brady', 'Chris']
+        });
+      });
+  });
+
+  it('updates jam session by id', () => {
+    return request(app)
+      .put(`/api/v1/jam-sessions/${jamSession._id}`)
+      .send({
+        where: 'Beaverton Community Center',
+        when: new Date('August 24, 2019'),
+        who: ['Sandra', 'Adam', 'Bella']
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: jamSession._id.toString(),
+          where: 'Beaverton Community Center',
+          when: new Date('August 24, 2019').toISOString(),
+          who: ['Sandra', 'Adam', 'Bella']
         });
       });
   });
