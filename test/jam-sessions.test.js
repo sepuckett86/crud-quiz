@@ -91,4 +91,18 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('deletes a jam session', () => {
+    return request(app)
+      .delete(`/api/v1/jam-sessions/${jamSession._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: jamSession._id.toString(),
+          where: 'Jesuit High School',
+          when: new Date('July 30, 2019').toISOString(),
+          who: ['Allision', 'Brady', 'Chris'],
+          __v: 0
+        });
+      });
+  });
 });
