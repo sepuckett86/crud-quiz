@@ -16,9 +16,9 @@ describe('app routes', () => {
     return mongoose.connection.dropDatabase();
   });
 
-
+  let jamSession = null;
   beforeEach(async() => {
-    await JamSession.create({
+    jamSession = await JamSession.create({
       where: 'Jesuit High School',
       when: new Date('July 30, 2019'),
       who: ['Allision', 'Brady', 'Chris']
@@ -58,6 +58,19 @@ describe('app routes', () => {
           when: new Date('July 30, 2019').toISOString(),
           who: ['Allision', 'Brady', 'Chris'],
         }]);
+      });
+  });
+
+  it('gets jam session by id', () => {
+    return request(app)
+      .get(`/api/v1/jam-sessions/${jamSession._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: jamSession._id.toString(),
+          where: 'Jesuit High School',
+          when: new Date('July 30, 2019').toISOString(),
+          who: ['Allision', 'Brady', 'Chris'],
+        });
       });
   });
 });
