@@ -5,6 +5,8 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 
+const JamSession = require('../lib/models/JamSession');
+
 describe('app routes', () => {
   beforeAll(() => {
     connect();
@@ -12,6 +14,15 @@ describe('app routes', () => {
 
   beforeEach(() => {
     return mongoose.connection.dropDatabase();
+  });
+
+
+  beforeEach(async() => {
+    await JamSession.create({
+      where: 'Jesuit High School',
+      when: new Date('July 30, 2019'),
+      who: ['Allision', 'Brady', 'Chris']
+    });
   });
 
   afterAll(() => {
@@ -34,6 +45,19 @@ describe('app routes', () => {
           who: ['Allision', 'Brady', 'Chris'],
           __v: 0
         });
+      });
+  });
+
+  it('gets all jam sessions', () => {
+    return request(app)
+      .get('/api/v1/jam-sessions')
+      .then(res => {
+        expect(res.body).toEqual([{
+          _id: expect.any(String),
+          where: 'Jesuit High School',
+          when: new Date('July 30, 2019').toISOString(),
+          who: ['Allision', 'Brady', 'Chris'],
+        }]);
       });
   });
 });
